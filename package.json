@@ -1,0 +1,31 @@
+{
+  "name": "shopping_list_backend",
+  "version": "0.0.1",
+  "description": "A simple backend for a shopping list web app.",
+  "main": "build/index.js",
+  "scripts": {
+    "run": "node .",
+    "build": "tsc",
+    "test": "echo 'No tests yet...'"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jallmann/shopping_list_backend.git"
+  },
+  "author": "Jonas Allmann",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/jallmann/shopping_list_backend/issues"
+  },
+  "homepage": "https://github.com/jallmann/shopping_list_backend#readme",
+  "dependencies": {
+    "fastify": "^4.24.3",
+    "redis": "^4.6.10",
+    "redis-om": "^0.4.2",
+    "typescript": "^5.2.2"
+  },
+  "devDependencies": {
+    "@types/node": "^20.8.9",
+    "ts-standard": "^12.0.2"
+  }
+}
