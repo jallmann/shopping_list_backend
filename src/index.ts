@@ -164,6 +164,7 @@ fastify.get<{ Params: IGetFavouritesParams }>(
 fastify.post<{ Params: IPostFavouriteParams; Body: IPostFavouriteBody }>(
   "/users/:user_id/favourites",
   async (request, reply) => {
+    console.log(request.params.user_id, request.body.product_id)
     const result = await add_favourite(
       request.params.user_id,
       request.body.product_id

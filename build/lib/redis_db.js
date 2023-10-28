@@ -50,17 +50,35 @@ function init_db() {
         yield productRepository.createIndex();
         yield userRepository.createIndex();
         yield cartRepository.createIndex();
-        process.env.DB_CONTENT_INIT && (yield fill_db());
+        process.env.DB_REINIT && (yield flush_and_refill_db());
     });
 }
 exports.init_db = init_db;
-function fill_db() {
+/**
+ * Used to put some initial data into the db.
+ */
+function flush_and_refill_db() {
     return __awaiter(this, void 0, void 0, function* () {
-        console.log("Adding initial user.");
-        yield userRepository.save({
-            id: "userId1",
-            favourites: [],
-        });
+        const oldProducts = yield productRepository.search().return.all();
+        yield Promise.all(oldProducts.map((product) => __awaiter(this, void 0, void 0, function* () {
+            return (yield productRepository.remove(product[redis_om_1.EntityId] || ''));
+        })));
+        const oldCarts = yield cartRepository.search().return.all();
+        yield Promise.all(oldCarts.map((cart) => __awaiter(this, void 0, void 0, function* () {
+            return (yield cartRepository.remove(cart[redis_om_1.EntityId] || ''));
+        })));
+        const oldUsers = yield userRepository.search().return.all();
+        yield Promise.all(oldUsers.map((user) => __awaiter(this, void 0, void 0, function* () {
+            return (yield userRepository.remove(user[redis_om_1.EntityId] || ''));
+        })));
+        const products = require("../../db_init_data/products.json");
+        const users = require("../../db_init_data/users.json");
+        yield Promise.all(products.map((product) => __awaiter(this, void 0, void 0, function* () {
+            yield productRepository.save(product);
+        })));
+        yield Promise.all(users.map((user) => __awaiter(this, void 0, void 0, function* () {
+            yield userRepository.save(user);
+        })));
     });
 }
 /**

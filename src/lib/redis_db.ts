@@ -45,15 +45,39 @@ export async function init_db() {
   await productRepository.createIndex()
   await userRepository.createIndex()
   await cartRepository.createIndex()
-  process.env.DB_CONTENT_INIT && (await fill_db())
+
+  process.env.DB_REINIT && (await flush_and_refill_db())
 }
 
-async function fill_db() {
-  console.log("Adding initial user.")
-  await userRepository!.save({
-    id: "userId1",
-    favourites: [],
-  })
+/**
+ * Used to put some initial data into the db.
+ */
+async function flush_and_refill_db() {
+  const oldProducts = await productRepository!.search().return.all()
+  await Promise.all(oldProducts.map(async product => (
+    await productRepository!.remove(product[EntityId] || '')
+  )))
+  const oldCarts = await cartRepository!.search().return.all()
+  await Promise.all(oldCarts.map(async cart => (
+    await cartRepository!.remove(cart[EntityId] || '')
+  )))
+  const oldUsers = await userRepository!.search().return.all()
+  await Promise.all(oldUsers.map(async user => (
+    await userRepository!.remove(user[EntityId] || '')
+  )))
+
+  const products: Product[] = require("../../db_init_data/products.json")
+  const users: User[] = require("../../db_init_data/users.json")
+  await Promise.all(
+    products.map(async (product) => {
+      await productRepository!.save(product)
+    })
+  )
+  await Promise.all(
+    users.map(async (user) => {
+      await userRepository!.save(user)
+    })
+  )
 }
 
 /**

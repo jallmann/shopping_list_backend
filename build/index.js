@@ -111,6 +111,7 @@ fastify.get("/users/:user_id/favourites", (request, reply) => __awaiter(void 0, 
 }));
 // FIXME: Move to plugin
 fastify.post("/users/:user_id/favourites", (request, reply) => __awaiter(void 0, void 0, void 0, function* () {
+    console.log(request.params.user_id, request.body.product_id);
     const result = yield (0, redis_db_1.add_favourite)(request.params.user_id, request.body.product_id);
     return result;
 }));

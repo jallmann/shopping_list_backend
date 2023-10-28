@@ -15,6 +15,8 @@ We us redis as a simple DB backend, so we need:
 
 Server listens on localhost:3000
 
+Run with `DB_REINIT=true npm run-script run` to flush and initialize the db upon startup.
+
 ## What's missing
 
 - Authentication
